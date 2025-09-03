@@ -1,4 +1,4 @@
-// Preferências salvas
+// Preferências
 const PREFS_KEY = "relogio_prefs";
 const defaults = { theme: "dark", format24: true };
 
@@ -18,16 +18,22 @@ const prefs = loadPrefs();
 document.documentElement.setAttribute("data-theme", prefs.theme);
 
 // Elementos
-const elHours = document.getElementById("hours");
+const elHours   = document.getElementById("hours");
 const elMinutes = document.getElementById("minutes");
 const elSeconds = document.getElementById("seconds");
-const elSuffix = document.getElementById("suffix");
-const elDate = document.getElementById("date");
-const elTZ = document.getElementById("tz");
-const btnTheme = document.getElementById("toggleTheme");
+const elSuffix  = document.getElementById("suffix");
+const elDate    = document.getElementById("date");
+const elTZ      = document.getElementById("tz");
+
+const btnTheme  = document.getElementById("toggleTheme");
 const btnFormat = document.getElementById("toggleFormat");
 
-// Mostra fuso/local
+// Estado inicial dos botões
+btnTheme.setAttribute("aria-pressed", String(prefs.theme === "dark"));
+btnFormat.textContent = prefs.format24 ? "24h" : "12h";
+btnFormat.setAttribute("aria-pressed", String(prefs.format24));
+
+// Fuso
 try {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   elTZ.textContent = `Fuso horário: ${tz}`;
@@ -35,15 +41,12 @@ try {
   elTZ.textContent = "";
 }
 
-// Atualização do relógio
-function pad2(n) {
-  return String(n).padStart(2, "0");
-}
+// Relógio
+const pad2 = (n) => String(n).padStart(2, "0");
 
 function renderClock() {
   const now = new Date();
 
-  // horário
   let h = now.getHours();
   const m = now.getMinutes();
   const s = now.getSeconds();
@@ -52,7 +55,7 @@ function renderClock() {
     elSuffix.hidden = true;
   } else {
     const isPM = h >= 12;
-    const hr12 = h % 12 || 12;
+    const hr12 = (h % 12) || 12;
     elSuffix.textContent = isPM ? "PM" : "AM";
     elSuffix.hidden = false;
     h = hr12;
@@ -62,51 +65,43 @@ function renderClock() {
   elMinutes.textContent = pad2(m);
   elSeconds.textContent = pad2(s);
 
-  // data por extenso em pt-BR
   const fmt = new Intl.DateTimeFormat("pt-BR", {
     weekday: "long",
     day: "2-digit",
     month: "long",
-    year: "numeric",
+    year: "numeric"
   });
-  const formatted = fmt.format(now);
-  // Capitaliza a primeira letra do dia/mes (opcional)
-  elDate.textContent =
-    formatted.charAt(0).toLowerCase() === formatted.charAt(0)
-      ? formatted[0].toUpperCase() + formatted.slice(1)
-      : formatted;
+  const str = fmt.format(now);
+  elDate.textContent = str[0].toUpperCase() + str.slice(1);
 }
 
-// Alternar tema
+// Ações
 function toggleTheme() {
-  prefs.theme = prefs.theme === "dark" ? "light" : "dark";
+  prefs.theme = (prefs.theme === "dark") ? "light" : "dark";
   document.documentElement.setAttribute("data-theme", prefs.theme);
+  btnTheme.setAttribute("aria-pressed", String(prefs.theme === "dark"));
   savePrefs(prefs);
 }
 
-// Alternar formato 12/24h
 function toggleFormat() {
   prefs.format24 = !prefs.format24;
   btnFormat.textContent = prefs.format24 ? "24h" : "12h";
+  btnFormat.setAttribute("aria-pressed", String(prefs.format24));
   savePrefs(prefs);
   renderClock();
 }
 
-// Listeners
 btnTheme.addEventListener("click", toggleTheme);
 btnFormat.addEventListener("click", toggleFormat);
 
-// Teclado: T = tema, F = formato
+// Atalhos
 document.addEventListener("keydown", (e) => {
   const k = e.key.toLowerCase();
   if (k === "t") toggleTheme();
   if (k === "f") toggleFormat();
 });
 
-// Estado inicial do botão de formato
-btnFormat.textContent = prefs.format24 ? "24h" : "12h";
-
-// Loop do relógio (1x/segundo, alinhado ao segundo)
+// Loop alinhado ao segundo
 function startTick() {
   renderClock();
   const now = Date.now();
@@ -116,5 +111,4 @@ function startTick() {
     setTimeout(tick, 1000);
   }, delay);
 }
-
 startTick();

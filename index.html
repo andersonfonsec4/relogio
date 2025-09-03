@@ -1,43 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Relógio Digital</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <main class="container">
-      <header class="topbar">
-        <h1 class="title">Relógio</h1>
-        <div class="controls">
-          <button id="toggleTheme" aria-label="Alternar tema">🌗</button>
-          <button id="toggleFormat" aria-label="Alternar formato 12/24h">
-            24h
-          </button>
-        </div>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Relógio Digital</title>
 
-      <section class="clock">
-        <div class="time" aria-live="polite" aria-atomic="true">
-          <span id="hours">00</span>
-          <span class="colon" id="colon">:</span>
-          <span id="minutes">00</span>
-          <span class="seconds">:<span id="seconds">00</span></span>
-          <span class="suffix" id="suffix" hidden>AM</span>
-        </div>
-        <div class="date" id="date">segunda, 01 de janeiro de 2000</div>
-        <div class="tz" id="tz"></div>
-      </section>
+  <!-- Metadados / cores por tema -->
+  <meta name="color-scheme" content="dark light" />
+  <meta name="description" content="Relógio digital com tema claro/escuro, 12/24h e preferências salvas." />
+  <meta name="theme-color" content="#0f0f12" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 
-      <footer class="footer">
-        <small
-          >Dica: use a tecla <b>T</b> para alternar o tema e <b>F</b> para
-          alternar 12/24h.</small
-        >
-      </footer>
-    </main>
+  <!-- Open Graph -->
+  <meta property="og:title" content="Relógio Digital" />
+  <meta property="og:description" content="Relógio com tema claro/escuro e 12/24h." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://andersonfonsec4.github.io/relogio/" />
+  <meta property="og:image" content="og-image.png" />
 
-    <script src="script.js"></script>
-  </body>
+  <!-- Ícones & Manifest (PWA) -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <link rel="manifest" href="manifest.json" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="topbar">
+      <h1 class="title">Relógio</h1>
+      <div class="controls">
+        <button id="toggleTheme" aria-label="Alternar tema" aria-pressed="true">🌗</button>
+        <button id="toggleFormat" aria-label="Alternar formato 12/24h" aria-pressed="true">24h</button>
+      </div>
+    </header>
+
+    <section class="clock">
+      <div class="time" aria-live="polite" aria-atomic="true">
+        <span id="hours">00</span>
+        <span class="colon" id="colon">:</span>
+        <span id="minutes">00</span>
+        <span class="seconds">:<span id="seconds">00</span></span>
+        <span class="suffix" id="suffix" hidden>AM</span>
+      </div>
+      <div class="date" id="date">segunda, 01 de janeiro de 2000</div>
+      <div class="tz" id="tz"></div>
+    </section>
+
+    <footer class="footer">
+      <small>Dica: use <b>T</b> para alternar o tema e <b>F</b> para alternar 12/24h.</small>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(console.error);
+    }
+  </script>
+</body>
 </html>
