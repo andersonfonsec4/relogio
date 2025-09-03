@@ -1,5 +1,5 @@
-// Versão do cache — altere quando mudar os assets
-const CACHE = "relogio-v3-2025-09-03";
+// Versão do cache — altere quando publicar mudanças
+const CACHE = "relogio-v4-2025-09-03";
 
 // Arquivos a pré-cachear
 const ASSETS = [

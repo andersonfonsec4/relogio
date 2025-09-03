@@ -68,6 +68,15 @@ button:focus-visible, [role="button"]:focus-visible {
 .controls button:hover { background: rgba(255,255,255,0.04); }
 .controls button:active { transform: translateY(1px); }
 
+/* Botão "Instalar" (opcional) */
+.controls .install {
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+.controls .install:hover {
+  background: rgba(255,255,255,0.06);
+}
+
 .clock { margin: 12px auto 8px; text-align: center; }
 
 .time {

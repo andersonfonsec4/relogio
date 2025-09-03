@@ -1,4 +1,4 @@
-// Preferências
+// ===== Preferências =====
 const PREFS_KEY = "relogio_prefs";
 const defaults = { theme: "dark", format24: true };
 
@@ -17,7 +17,7 @@ function savePrefs(p) {
 const prefs = loadPrefs();
 document.documentElement.setAttribute("data-theme", prefs.theme);
 
-// Elementos
+// ===== Elementos =====
 const elHours   = document.getElementById("hours");
 const elMinutes = document.getElementById("minutes");
 const elSeconds = document.getElementById("seconds");
@@ -27,6 +27,7 @@ const elTZ      = document.getElementById("tz");
 
 const btnTheme  = document.getElementById("toggleTheme");
 const btnFormat = document.getElementById("toggleFormat");
+const installBtn = document.getElementById("btnInstall");
 
 // Estado inicial dos botões
 btnTheme.setAttribute("aria-pressed", String(prefs.theme === "dark"));
@@ -41,7 +42,7 @@ try {
   elTZ.textContent = "";
 }
 
-// Relógio
+// ===== Relógio =====
 const pad2 = (n) => String(n).padStart(2, "0");
 
 function renderClock() {
@@ -75,7 +76,7 @@ function renderClock() {
   elDate.textContent = str[0].toUpperCase() + str.slice(1);
 }
 
-// Ações
+// ===== Ações =====
 function toggleTheme() {
   prefs.theme = (prefs.theme === "dark") ? "light" : "dark";
   document.documentElement.setAttribute("data-theme", prefs.theme);
@@ -101,7 +102,39 @@ document.addEventListener("keydown", (e) => {
   if (k === "f") toggleFormat();
 });
 
-// Loop alinhado ao segundo
+// ===== Botão "Instalar app" (PWA) =====
+const isStandalone =
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
+if (isStandalone && installBtn) {
+  installBtn.hidden = true;
+}
+
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (installBtn && !isStandalone) {
+    installBtn.hidden = false;
+  }
+});
+
+installBtn?.addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+  installBtn.disabled = true;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice; // { outcome: 'accepted' | 'dismissed', platform: ... }
+  deferredPrompt = null;
+  installBtn.hidden = true;
+  installBtn.disabled = false;
+});
+
+window.addEventListener("appinstalled", () => {
+  if (installBtn) installBtn.hidden = true;
+});
+
+// ===== Loop alinhado ao segundo =====
 function startTick() {
   renderClock();
   const now = Date.now();
