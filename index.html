@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relógio Digital</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="topbar">
+        <h1 class="title">Relógio</h1>
+        <div class="controls">
+          <button id="toggleTheme" aria-label="Alternar tema">🌗</button>
+          <button id="toggleFormat" aria-label="Alternar formato 12/24h">
+            24h
+          </button>
+        </div>
+      </header>
+
+      <section class="clock">
+        <div class="time" aria-live="polite" aria-atomic="true">
+          <span id="hours">00</span>
+          <span class="colon" id="colon">:</span>
+          <span id="minutes">00</span>
+          <span class="seconds">:<span id="seconds">00</span></span>
+          <span class="suffix" id="suffix" hidden>AM</span>
+        </div>
+        <div class="date" id="date">segunda, 01 de janeiro de 2000</div>
+        <div class="tz" id="tz"></div>
+      </section>
+
+      <footer class="footer">
+        <small
+          >Dica: use a tecla <b>T</b> para alternar o tema e <b>F</b> para
+          alternar 12/24h.</small
+        >
+      </footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
